@@ -18,3 +18,9 @@ model User {
   email     String   @unique
   createdAt DateTime @default(now())
 }
+
+model Note {
+  id        Int       @id @default(autoincrement())
+  body      String
+  createdAt DateTime  @default(now())
+}

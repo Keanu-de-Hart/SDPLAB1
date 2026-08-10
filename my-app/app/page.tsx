@@ -1,6 +1,13 @@
 import { createNote } from "./actions";
+import { prisma } from "@/lib/prisma";
 
-export default function Home() {
+
+export default async function Home() {
+
+  const notes = await prisma.note.findMany({
+    orderBy: { createdAt: "desc" },
+  });
+
   return (
     <main>
       <h1>Notes</h1>
@@ -14,6 +21,17 @@ export default function Home() {
         <button type="submit">save</button>
       </form>
       </details>
+
+      <ul>
+        {notes.map((note) => (
+          <li key={note.id}>
+            <p className="whitespace-pre-wrap">{note.body}</p>
+            <time dateTime={note.createdAt.toISOString()}>
+              {note.createdAt.toLocaleString()}
+            </time>
+          </li>
+        ))}
+      </ul>
     </main>
   );
 

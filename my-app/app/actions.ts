@@ -12,9 +12,9 @@ export async function updateNote(id: number, formdata: FormData) {
 
   if (!body) return;
 
-  await prisma.note.update({
+  await prisma.task.update({
     where: { id },
-    data: { body },
+    data: { body, title, description, dueDate, topic },
   });
 }
 
@@ -25,12 +25,9 @@ export async function createNote(formdata: FormData) {
   const dueDate = new Date(String(formdata.get("dueDate")));
   const topic = String(formdata.get("topic") ?? "").trim();
 
-
   if (!body) return;
-  
-  await prisma.note.create({
-    data: {
-      body,
-    },
+
+  await prisma.task.create({
+    data: { body, title, description, dueDate, topic },
   });
 }

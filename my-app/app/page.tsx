@@ -4,7 +4,8 @@ import { updateNote } from "./actions";
 
 export default async function Home() {
 
-  const notes = await prisma.note.findMany({
+  const notes = await prisma.task.findMany({
+    where: { archived: false },
     orderBy: { createdAt: "desc" },
   });
 

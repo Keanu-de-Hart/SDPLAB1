@@ -29,6 +29,13 @@ export default async function Home() {
         <label htmlFor="topic">Topic</label>
         <input id="topic" name="topic" type="text" />
 
+        <label htmlFor="status">Status</label>
+        <select id="status" name="status" defaultValue="Todo">
+          <option value="Todo">Todo</option>
+          <option value="InProgress">In-Progress</option>
+          <option value="Complete">Complete</option>
+        </select>
+
         <label htmlFor="body">Note</label>
         <textarea id="body" name="body" rows={8} />
         <button type="submit">save</button>
@@ -43,6 +50,7 @@ export default async function Home() {
 
               <p>{note.description}</p>
               <p>Topic: {note.topic}</p>
+              <p>Status: {note.status}</p>
               <p>Due: {note.dueDate.toLocaleDateString()}</p>
 
               <form action={updateNote.bind(null, note.id)}>
@@ -62,6 +70,13 @@ export default async function Home() {
 
                 <label htmlFor={`topic-${note.id}`}>Topic</label>
                 <input id={`topic-${note.id}`} name="topic" type="text" defaultValue={note.topic} />
+
+                <label htmlFor={`status-${note.id}`}>Status</label>
+                <select id={`status-${note.id}`} name="status" defaultValue={note.status}>
+                  <option value="Todo">Todo</option>
+                  <option value="InProgress">In-Progress</option>
+                  <option value="Complete">Complete</option>
+                </select>
 
                 <label htmlFor={`body-${note.id}`}>Note</label>
                 <textarea id={`body-${note.id}`} name="body" rows={8} defaultValue={note.body} />

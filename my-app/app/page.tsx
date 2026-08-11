@@ -1,6 +1,6 @@
 import { createNote } from "./actions";
 import { prisma } from "@/lib/prisma";
-
+import { updateNote } from "./actions";
 
 export default async function Home() {
 
@@ -25,7 +25,13 @@ export default async function Home() {
       <ul>
         {notes.map((note) => (
           <li key={note.id}>
-            <p className="whitespace-pre-wrap">{note.body}</p>
+            <details>
+              <summary>{note.body}</summary>
+              <form action={updateNote.bind(null, note.id)}>
+                <textarea name="body" rows={8} defaultValue={note.body} />
+                <button type="submit">save</button>
+              </form>
+            </details>
             <time dateTime={note.createdAt.toISOString()}>
               {note.createdAt.toLocaleString()}
             </time>

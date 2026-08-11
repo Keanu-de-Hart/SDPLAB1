@@ -2,6 +2,7 @@
 
 import {prisma} from "@/lib/prisma";
 import { Status } from "@prisma/client";
+import { revalidatePath } from "next/cache";
 
 
 export async function updateNote(id: number, formdata: FormData) {
@@ -18,6 +19,8 @@ export async function updateNote(id: number, formdata: FormData) {
     where: { id },
     data: { body, title, description, dueDate, topic, status },
   });
+
+  revalidatePath("/");
 }
 
 export async function createNote(formdata: FormData) {
@@ -33,6 +36,8 @@ export async function createNote(formdata: FormData) {
   await prisma.task.create({
     data: { body, title, description, dueDate, topic, status },
   });
+
+  revalidatePath("/");
 }
 
 
@@ -41,4 +46,6 @@ export async function archiveTask(id: number) {
     where: { id },
     data: { archived: true },
   });
+
+  revalidatePath("/");
 }

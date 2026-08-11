@@ -1,17 +1,36 @@
 import { archiveTask, createNote } from "./actions";
 import { prisma } from "@/lib/prisma";
 import { updateNote } from "./actions";
+import Link from "next/link";
 
-export default async function Home() {
+export default async function Home({
+  searchParams,
+}: {
+  searchParams: Promise<{ sort?: string }>;
+}) {
+  const { sort } = await searchParams;
+
+  const orderBy =
+    sort === "topic" ? { topic: "asc" as const } :
+    sort === "status" ? { status: "asc" as const } :
+    sort === "dueDate" ? { dueDate: "asc" as const } :
+    { createdAt: "desc" as const };
 
   const notes = await prisma.task.findMany({
     where: { archived: false },
-    orderBy: { createdAt: "desc" },
+    orderBy,
   });
 
   return (
     <main>
       <h1>Notes</h1>
+
+      <nav>
+        Sort by: <Link href="?sort=topic">Topic</Link> |{" "}
+        <Link href="?sort=status">Status</Link> |{" "}
+        <Link href="?sort=dueDate">Due Date</Link> |{" "}
+        <Link href="?">Newest</Link>
+      </nav>
 
       <details>
         <summary>New Note</summary>
@@ -43,7 +62,10 @@ export default async function Home() {
       </details>
 
       <ul>
-        {notes.map((note) => (
+        {notes.map((note) => {
+          const isOverdue = note.dueDate < new Date() && note.status !== "Complete";
+
+          return (
           <li key={note.id}>
             <details>
               <summary>{note.title || note.body}</summary>
@@ -51,7 +73,10 @@ export default async function Home() {
               <p>{note.description}</p>
               <p>Topic: {note.topic}</p>
               <p>Status: {note.status}</p>
-              <p>Due: {note.dueDate.toLocaleDateString()}</p>
+              <p className={isOverdue ? "text-red-600 font-bold" : undefined}>
+                Due: {note.dueDate.toLocaleDateString()}
+                {isOverdue && " — overdue"}
+              </p>
 
               <form action={updateNote.bind(null, note.id)}>
                 <label htmlFor={`title-${note.id}`}>Title</label>
@@ -90,7 +115,8 @@ export default async function Home() {
               {note.createdAt.toLocaleString()}
             </time>
           </li>
-        ))}
+          );
+        })}
       </ul>
     </main>
   );

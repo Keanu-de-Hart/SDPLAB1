@@ -19,11 +19,20 @@ model User {
   createdAt DateTime @default(now())
 }
 
-model Note {
-  id          Int       @id @default(autoincrement())
+enum Status {
+  Todo
+  InProgress
+  Complete
+}
+
+model Task {
+  id          Int      @id @default(autoincrement())
   title       String
   body        String
+  description String
   dueDate     DateTime
   topic       String
-  createdAt   DateTime  @default(now())
+  status      Status   @default(Todo)
+  archived    Boolean  @default(false)
+  createdAt   DateTime @default(now())
 }

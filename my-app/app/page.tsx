@@ -1,4 +1,4 @@
-import { createNote } from "./actions";
+import { archiveTask, createNote } from "./actions";
 import { prisma } from "@/lib/prisma";
 import { updateNote } from "./actions";
 
@@ -67,6 +67,9 @@ export default async function Home() {
                 <textarea id={`body-${note.id}`} name="body" rows={8} defaultValue={note.body} />
                 <button type="submit">save</button>
               </form>
+              <form action={archiveTask.bind(null, note.id)}>
+  <button type="submit">archive</button>
+</form>
             </details>
             <time dateTime={note.createdAt.toISOString()}>
               {note.createdAt.toLocaleString()}

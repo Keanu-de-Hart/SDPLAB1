@@ -31,3 +31,11 @@ export async function createNote(formdata: FormData) {
     data: { body, title, description, dueDate, topic },
   });
 }
+
+
+export async function archiveTask(id: number) {
+  await prisma.task.update({
+    where: { id },
+    data: { archived: true },
+  });
+}
